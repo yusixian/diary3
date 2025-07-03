@@ -1,19 +1,17 @@
 import Theme from '@/components/app/Theme';
 import { ClientOnly } from '@/components/common/ClientOnly';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import DialogComponents from '@/components/dialog/DialogComponents';
+import GlobalClientComp from '@/components/layout/GlobalClientComp';
 import Header from '@/components/layout/Header';
-import Navbar from '@/components/layout/Navbar';
 import Providers from '@/providers/root';
 import { ddin, poppins } from '@/styles/fonts';
-import { cn } from '@/utils';
+import { ClerkProvider } from '@clerk/nextjs';
 import { clsx } from 'clsx';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { ToastContainer } from 'react-toastify';
-import type { Viewport } from 'next';
-import DialogComponents from '@/components/dialog/DialogComponents';
 
 import '@/styles/globals.css';
-import { ClerkProvider } from '@clerk/nextjs';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -42,16 +40,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <html lang="en">
         <body className={clsx(poppins.variable, ddin.variable)} suppressHydrationWarning>
           <Providers>
-            <div className={cn('flex h-[100dvh] flex-col overflow-hidden')}>
-              <ErrorBoundary>
+            {/* <div className={cn('flex h-[100dvh] flex-col overflow-hidden')}> */}
+            <ErrorBoundary>
+              {/* <Navbar /> */}
+              <main className="min-h-screen bg-gradient-to-br from-white to-purple-100">
+                <Header />
+                {children}
                 <ClientOnly>
-                  <Header />
+                  <GlobalClientComp />
                 </ClientOnly>
-                <main className="min relative flex-grow overflow-auto scroll-smooth bg-[#F6F6F6]">{children}</main>
-              </ErrorBoundary>
-              <Navbar />
-              <DialogComponents />
-            </div>
+              </main>
+            </ErrorBoundary>
+            <DialogComponents />
+            {/* </div> */}
             <ToastContainer autoClose={3000} position="top-center" />
             <Theme />
           </Providers>
